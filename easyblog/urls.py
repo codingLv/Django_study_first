@@ -17,6 +17,9 @@ from django.conf.urls import url,include
 from django.contrib import admin
 
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
+    #^admin将会和以admin为开头的url匹配，例如/admin/user/
+    url(r'/admin/', admin.site.urls),
     url(r'', include('blog.urls')),
 ]
