@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from django import template
-from ..models import Article,Category
+from ..models import Article,Category,Tag
 from django .db.models.aggregates import Count
 
 register = template.Library()
@@ -20,3 +20,8 @@ def archives():
 def get_categories():
     Category_list=Category.objects.annotate(num_article = Count('article'))
     return Category_list
+
+@register.simple_tag
+def get_tags():
+    Tag_list=Tag.objects.annotate(num_article = Count('article'))
+    return Tag_list

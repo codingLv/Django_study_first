@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import markdown
 from django.shortcuts import render
 from .models import Article,Category,Tag
 from django.shortcuts import get_object_or_404
@@ -26,6 +27,12 @@ def detail(request,id):
     如果不存在，就给用户返回一个 404 错误，表明用户请求的文章不存在。
     '''
     article = get_object_or_404(Article,id=id)
+    article.body = markdown.markdown(article.body,
+    extensions = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite',
+    'markdown.extensions.toc',
+    ])
     return render(request, 'detail.html', context={'article':article})
 
 def archives(request, year, month):
@@ -36,5 +43,11 @@ def archives(request, year, month):
 def category(request,id):
     cate = get_object_or_404(Category,id=id)
     article_list = Article.objects.filter(category=cate).order_by('-created_time')
+
+    return render(request, 'index.html', context={'article_list':article_list})
+
+def tag(request,id):
+    tags = get_object_or_404(Tag,id=id)
+    article_list = Article.objects.filter(tags = tags).order_by('-created_time')
 
     return render(request, 'index.html', context={'article_list':article_list})
